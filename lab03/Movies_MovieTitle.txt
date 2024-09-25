@@ -1,0 +1,60 @@
+FIELD SPECIFICATIONS
+
+GENERAL ELEMENTS
+
+Field Name:          MovieTitle
+Parent Table:        Movies
+Alias(es):            _ 
+Specification Type:
+  Unique:  _ 
+  Generic: X
+  Replica: _ 
+Source Specification: _ 
+Shared By:            _
+Description:          The title of a movie 
+
+
+PHYSICAL ELEMENTS
+
+Data Type:            VARCHAR
+Length:               250 
+Decimal Places:       0  
+Character Support:
+  Letters (A-Z):      X 
+  Numbers (0-9):      X 
+  Keyboard (.,/$#%):  X 
+  Special (©®™Σπ):    X 
+
+
+LOGICAL ELEMENTS
+
+Key Type:      Non:        X 
+               Primary:    _ 
+               Foreign:    _ 
+               Alternate:  _ 
+
+Key Structure: Simple:     X 
+               Composite:  _ 
+
+Uniqueness:    Non-unique: X
+               Unique:     _ 
+
+Null Support:  Nulls OK:   _ 
+               No nulls:   X 
+
+Values Entered By: User:   _ 
+                   System: X
+
+Required Value:    No:     _ 
+                   Yes:    X
+
+Range of Values:   0 to 99,999 
+
+Edit Rule:
+  Enter now, edits allowed:       _ 
+  Enter now, edits not allowed:   X 
+  Enter later, edits allowed:     _ 
+  Enter later, edits not allowed: _ 
+  Not determined at this time:    _ 
+
+NOTES: _
