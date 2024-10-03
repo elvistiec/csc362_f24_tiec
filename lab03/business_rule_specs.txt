@@ -1,0 +1,270 @@
+BUSINESS RULE #1
+
+RULE INFORMATION
+
+Statement:  Each customer must have a unique mobile phone number. No two customers can share the same number.
+
+Constraint: Unique mobile number for every customer.
+
+Type:     Database Oriented:     X 
+          Application Oriented   _ 
+
+Category: Field Specific:        X 
+          Relationship Specific: _ 
+
+Test On:  Insert:                X
+          Delete:                _ 
+          Update:                X
+
+
+STRUCTURES AFFECTED
+
+Field Names: customer_phone_number
+
+Table Names: Customer
+
+
+FIELD ELEMENTS AFFECTED
+
+Physical Elements: Data Type:           Integer
+                   Length:              10
+                   Character Support:   Numeric
+
+Logical Elements:  Key Type:            Unique
+                   Key Structure:       Simple
+                   Uniqueness:          Yes
+                   Null Support:        No
+                   Values Entered By:   User
+                   Range of Values:     10-digit phone numbers
+                   Edit Rule:           Format verification
+
+
+RELATIONSHIP CHARACTERISTICS AFFECTED
+
+    Deletion rule:              _
+    Type of participation:      _
+    Degree of participation:    _
+
+    
+ACTION TAKEN
+
+Create a unique constraint on the `customer_phone_number` field to ensure no duplicates.
+
+NOTES: This rule ensures data integrity by preventing duplicate contact information for different customers.
+
+BUSINESS RULE #2
+
+RULE INFORMATION
+
+Statement:  A rug cannot be deleted from the system if it has been involved in any sales or trial records.
+
+Constraint: Prevent deletion of a rug if linked to sales or trial records.
+
+Type:     Database Oriented:     X 
+          Application Oriented   _ 
+
+Category: Field Specific:        _ 
+          Relationship Specific: X 
+
+Test On:  Insert:                _ 
+          Delete:                X 
+          Update:                _ 
+
+
+STRUCTURES AFFECTED
+
+Field Names: rug_id
+
+Table Names: Rug, Sales, Trial
+
+
+FIELD ELEMENTS AFFECTED
+
+Physical Elements: Data Type:           Integer
+                   Length:              Variable
+                   Character Support:   Numeric
+
+Logical Elements:  Key Type:            Primary Key
+                   Key Structure:       Simple
+                   Uniqueness:          Yes
+                   Null Support:        No
+                   Values Entered By:   System/User
+                   Range of Values:     _ 
+                   Edit Rule:           _ 
+
+
+RELATIONSHIP CHARACTERISTICS AFFECTED
+
+    Deletion rule:              Deny deletion if rug is in any sales or trial records.
+    Type of participation:      Mandatory for Sales/Trial, optional for Rugs.
+    Degree of participation:    Sales/Trial (1, ∞), Rug (0, ∞)
+
+    
+ACTION TAKEN
+
+Enforce deletion constraint to ensure rugs with related sales or trial records cannot be deleted.
+
+NOTES: This preserves the historical integrity of rug transactions in the system.
+
+BUSINESS RULE #3
+
+RULE INFORMATION
+
+Statement:  A rug can be reserved or loaned for trial only once at a time, with no overlapping trials.
+
+Constraint: Prevent overlapping trial reservations for a rug.
+
+Type:     Database Oriented:     X 
+          Application Oriented   _ 
+
+Category: Field Specific:        _ 
+          Relationship Specific: X 
+
+Test On:  Insert:                X
+          Delete:                _ 
+          Update:                X
+
+
+STRUCTURES AFFECTED
+
+Field Names: rug_id, trial_start_date, trial_expected_return_date
+
+Table Names: Trial
+
+
+FIELD ELEMENTS AFFECTED
+
+Physical Elements: Data Type:           Date
+                   Length:              _ 
+                   Character Support:   _ 
+
+Logical Elements:  Key Type:            Foreign Key
+                   Key Structure:       Composite (rug_id + Dates)
+                   Uniqueness:          Yes
+                   Null Support:        No
+                   Values Entered By:   System/User
+                   Range of Values:     _ 
+                   Edit Rule:           No overlapping dates
+
+
+RELATIONSHIP CHARACTERISTICS AFFECTED
+
+    Deletion rule:              _ 
+    Type of participation:      Mandatory for both Rug and Trial.
+    Degree of participation:    Rug (1, ∞), Trial (0, 1)
+
+    
+ACTION TAKEN
+
+Check for overlapping dates when inserting or updating trial records for a rug.
+
+NOTES: This ensures a rug cannot be on trial with two customers at the same time.
+
+BUSINESS RULE #4
+
+RULE INFORMATION
+
+Statement:  Customer records cannot be deleted unless requested by the customer for privacy reasons.
+
+Constraint: Preserve customer records permanently unless explicitly removed for privacy.
+
+Type:     Database Oriented:     _ 
+          Application Oriented   X 
+
+Category: Field Specific:        _ 
+          Relationship Specific: X 
+
+Test On:  Insert:                _ 
+          Delete:                X
+          Update:                X
+
+
+STRUCTURES AFFECTED
+
+Field Names: customer_id
+
+Table Names: Customer
+
+
+FIELD ELEMENTS AFFECTED
+
+Physical Elements: Data Type:           Integer
+                   Length:              Variable
+                   Character Support:   Numeric
+
+Logical Elements:  Key Type:            Primary Key
+                   Key Structure:       Simple
+                   Uniqueness:          Yes
+                   Null Support:        No
+                   Values Entered By:   User
+                   Range of Values:     _ 
+                   Edit Rule:           _ 
+
+
+RELATIONSHIP CHARACTERISTICS AFFECTED
+
+    Deletion rule:              Deny deletion unless privacy removal request.
+    Type of participation:      _ 
+    Degree of participation:    _ 
+
+    
+ACTION TAKEN
+
+Disable regular customer deletion by database rules, unless processed manually for privacy.
+
+NOTES: This rule ensures long-term tracking of customer records and business history.
+
+
+BUSINESS RULE #5
+
+RULE INFORMATION
+
+Statement:  The markup percentage for a rug must always be non-negative.
+
+Constraint: Prevent negative values in the Markup field.
+
+Type:     Database Oriented:     X 
+          Application Oriented   _ 
+
+Category: Field Specific:        X 
+          Relationship Specific: _ 
+
+Test On:  Insert:                X
+          Delete:                _ 
+          Update:                X
+
+
+STRUCTURES AFFECTED
+
+Field Names: rug_markup
+
+Table Names: Rug
+
+
+FIELD ELEMENTS AFFECTED
+
+Physical Elements: Data Type:           Float
+                   Length:              Variable
+                   Character Support:   Numeric
+
+Logical Elements:  Key Type:            _ 
+                   Key Structure:       _ 
+                   Uniqueness:          _ 
+                   Null Support:        No
+                   Values Entered By:   User
+                   Range of Values:     ≥ 0
+                   Edit Rule:           Markup must be >= 0
+
+
+RELATIONSHIP CHARACTERISTICS AFFECTED
+
+    Deletion rule:              _ 
+    Type of participation:      _ 
+    Degree of participation:    _ 
+
+    
+ACTION TAKEN
+
+Enforce a constraint to prevent negative values in the Markup field.
+
+NOTES: This rule ensures that the markup percentage is valid and prevents loss in pricing calculations.
