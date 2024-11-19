@@ -13,6 +13,59 @@ $dbpass = 'mewtwo';
 
 $conn = new mysqli($dbhost, $dbuser, $dbpass, 'instrument_rentals');
 
+// Start session if user is still logged in, if not, enter username
+session_start();
+
+if (!isset($_SESSION['user_input'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_input'])) {
+        $_SESSION['user_input'] = $_POST['user_input'];
+        $_SESSION['added'] = 0;     
+        $_SESSION['deleted'] = 0;  
+    } else {
+        echo '<form method="POST">';
+        echo '<label for="user_input">Enter your name: </label>';
+        echo '<input type="text" name="user_input" required>';
+        echo '<button type="submit">login</button>';
+        echo '</form>';
+        exit(); 
+    }
+}
+
+// If user is already logged in
+echo "Name: {$_SESSION['user_input']}!<br>";
+echo "Records added: {$_SESSION['added']}<br>";
+echo "Records deleted: {$_SESSION['deleted']}<br>";
+
+// Logout and kill the session
+if (isset($_POST['logout'])) {
+    session_unset();
+    session_destroy();
+    header("Location: manage_instruments.php"); 
+    exit();
+}
+
+// Keeping track of added records
+if (isset($_POST['add_records'])) {
+    $_SESSION['added']+= 10;
+    echo "Record added! Total added: {$_SESSION['added']}<br>";
+}
+
+// Keeping track of deleting records
+if (isset($_POST['delbtn'])) {
+    $_SESSION['deleted']++;
+    echo "Record deleted! Total deleted: {$_SESSION['deleted']}<br>";
+}
+
+// Setting theme for the user depending on which button they click
+if (isset($_POST['theme'])) {
+    $theme = $_POST['theme'] === 'dark' ? 'darkmode.css' : 'basic.css';
+    setcookie("theme", $theme, time() + (10 * 365 * 24 * 60 * 60), "/"); 
+    header("Location: " . $_SERVER['PHP_SELF']); 
+    exit();
+}
+
+$theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'basic.css';
+
 if (isset($_POST['add_records'])) {
     // Handle adding records
     $insertQuery = file_get_contents("add_instruments.sql");
@@ -103,7 +156,19 @@ function result_to_html_table($result) {
 result_to_html_table($result);
 ?>
 
-<!-- Form to add new records -->
+<link rel="stylesheet" href="<?php echo htmlspecialchars($theme); ?>">
+
 <form method="POST">
     <input type="submit" name="add_records" value="Add extra records" />
+</form>
+
+<!-- Theme buttons and logout button -->
+
+<form method="POST">
+        <button type="submit" name="theme" value="light">Light Mode</button>
+        <button type="submit" name="theme" value="dark">Dark Mode</button>
+    </form>
+
+<form method="POST">
+    <button type="submit" name="logout">Logout</button>
 </form>
